@@ -14,21 +14,22 @@ import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
  * Created by Administrator on 2017/7/14 0014.
  */
 
-public class WeakUpService extends Service {
+public class WakeLockService extends Service {
+
+    private String TAG = getClass().getSimpleName();
 
     private PowerManager.WakeLock mCpuWakeLock;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.w("TIANSEN", "Service onCreate!");
-
+        Log.w(TAG, "Service onCreate!");
+        acquireWakeLock();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.w("TIANSEN", "Service onStartCommand!");
-        acquireWakeLock();
+        Log.w(TAG, "Service onStartCommand!");
         return START_STICKY;
     }
 
@@ -48,9 +49,7 @@ public class WeakUpService extends Service {
     private void acquireWakeLock() {
         if (mCpuWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-//            mCpuWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "okTag");
-            mCpuWakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "okTag");
-
+            mCpuWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
             if(mCpuWakeLock !=null) {
                 mCpuWakeLock.acquire();
             }
